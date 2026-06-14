@@ -287,8 +287,7 @@
   let tiempo_inicio = null;  
   let intervalo = null;
 
-  const segundos = 30
-  const limite = (segundos/60) * 60 * 1000;
+  const limite = 15 * 60 * 1000;
 
   const tiempo = document.getElementById("tiempo");
   const boton_play = document.getElementById("play");
@@ -298,7 +297,7 @@
 
   const pasto_pollitos = document.getElementById("pasto-pollitos");
 
-  const tiempo_entre_pollitos = (5/60) * 60 * 1000;
+  const tiempo_entre_pollitos = 1 * 60 * 1000;
   const velocidad_pollito = 1.5;
 
   const sonido_pollito = new Audio("audio/sonido_pollito.mp3");
