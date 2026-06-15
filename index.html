@@ -16,21 +16,6 @@
       position: relative;
       overflow: hidden;
     }
-    .fondo-granja {
-      position: fixed;
-      left: 0;
-      bottom: 0;
-      width: 100%;
-      height: 70vh;
-
-      background-image: url("images/granja.png");
-      background-repeat: no-repeat;
-      background-position: bottom center;
-      background-size: 100% auto;
-
-      z-index: 0;
-      pointer-events: none;
-    }
 
     .decoracion-cielo {
       position: fixed;
@@ -124,28 +109,78 @@
       }
     }
 
+    /*
+      CAPA 1:
+      La granja va hasta el fondo.
+    */
+    .granja-escena {
+      position: fixed;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .fondo-granja {
+      display: block;
+      width: 100%;
+      height: auto;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    /*
+      CAPA 3:
+      Los pollitos van por encima de TODO.
+      Esta capa se acomoda con JavaScript encima del pasto de la granja.
+    */
     #pasto-pollitos {
       position: fixed;
       left: 0;
       bottom: 0;
       width: 100%;
       height: 20vh;
-      z-index: 1;
-      overflow: hidden;
+      z-index: 9999;
+      overflow: visible;
       pointer-events: none;
     }
+
     .pollito-suelto {
       position: absolute;
-      font-size: 75px;
+      width: 75px;
+      height: 75px;
+      object-fit: contain;
       cursor: grab;
       user-select: none;
       touch-action: none;
       pointer-events: auto;
       transition: transform 0.15s;
+      z-index: 10000;
     }
+
     .pollito-suelto:active {
       cursor: grabbing;
       transform: scale(1.15);
+    }
+
+    /*
+      CAPA 2:
+      El cronómetro va encima de la granja,
+      pero debajo de los pollitos.
+    */
+    .contenedor {
+      position: relative;
+      z-index: 10;
+      background-color: rgba(255, 248, 220, 0.95);
+      border: 5px solid #f4b400;
+      border-radius: 30px;
+      padding: 45px 50px;
+      text-align: center;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      width: 520px;
+      min-height: 320px;
+      backdrop-filter: blur(2px);
     }
 
     .nombre-autor {
@@ -153,33 +188,27 @@
       top: -28px;
       left: 50%;
       transform: translateX(-50%);
-
       background-color: #fff1a8;
       color: #9a6500;
       border: 3px solid #f4b400;
       border-radius: 18px;
-
       padding: 8px 22px;
       font-size: 17px;
       font-weight: bold;
       letter-spacing: 0.4px;
-
       box-shadow: 0 6px 14px rgba(0, 0, 0, 0.18);
       white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      justify-content: center;
     }
 
-    .contenedor {
-      position: relative;
-      z-index: 2;
-      background-color: rgba(255, 248, 220, 0.95);
-      border: 5px solid #f4b400;
-      border-radius: 30px;
-      padding: 45px 50px;
-      text-align: center;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-      width: 520px;     
-      min-height: 320px; 
-      backdrop-filter: blur(2px);
+    .pollito-mini {
+      width: 26px;
+      height: 26px;
+      object-fit: contain;
+      vertical-align: middle;
     }
 
     h1 {
@@ -187,10 +216,18 @@
       margin-bottom: 10px;
       font-size: 50px;
     }
+
     .pollito {
-      font-size: 100px;
       margin: 10px 0;
       animation: saltito 1s infinite alternate;
+    }
+
+    .pollito img {
+      width: 100px;
+      height: 100px;
+      object-fit: contain;
+      user-select: none;
+      pointer-events: none;
     }
 
     @keyframes saltito {
@@ -212,6 +249,7 @@
       border-radius: 20px;
       border: 3px dashed #f4b400;
     }
+
     .botones button {
       font-size: 18px;
       padding: 12px 18px;
@@ -242,10 +280,15 @@
       transform: scale(1.08);
       opacity: 0.9;
     }
+
     .mensaje {
       color: #9a6500;
       font-size: 16px;
       margin-top: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
     }
   </style>
 </head>
@@ -253,23 +296,30 @@
 <body>
   <div class="decoracion-cielo">
     <img src="images/sol.png" class="sol-img" alt="Sol">
-
     <img src="images/nube1.png" class="nube-img nube-1" alt="Nube">
     <img src="images/nube2.png" class="nube-img nube-2" alt="Nube">
     <img src="images/nube3.png" class="nube-img nube-3" alt="Nube pollito">
   </div>
 
-  <div class="fondo-granja"></div>
+  <!-- Granja al fondo -->
+  <div class="granja-escena">
+    <img src="images/granja.png" class="fondo-granja" id="fondo-granja" alt="Granja">
+  </div>
 
-  <div id="pasto-pollitos"></div>
-
+  <!-- Cronómetro en medio -->
   <div class="contenedor">
 
-    <div class="nombre-autor">🐥 Vanessa Hernández Chavana 🐥</div>
+    <div class="nombre-autor">
+      <img src="images/pollito.png" class="pollito-mini" alt="Pollito">
+      Vanessa Hernández Chavana
+      <img src="images/pollito.png" class="pollito-mini" alt="Pollito">
+    </div>
 
     <h1>Cronómetro Pollito</h1>
 
-    <div class="pollito">🐣</div>
+    <div class="pollito">
+      <img src="images/pollito.png" alt="Pollito">
+    </div>
 
     <div id="tiempo">00:00.00</div>
 
@@ -279,12 +329,18 @@
       <button id="reiniciar">🔄 Reiniciar</button>
     </div>
 
-    <p class="mensaje">El pollito cuenta hasta 15 minutos 🐤</p>
+    <p class="mensaje">
+      El pollito cuenta hasta 15 minutos
+      <img src="images/pollito.png" class="pollito-mini" alt="Pollito">
+    </p>
   </div>
 
+  <!-- Pollitos hasta arriba -->
+  <div id="pasto-pollitos"></div>
+
 <script>
-  let tiempo_acumulado = 0;  
-  let tiempo_inicio = null;  
+  let tiempo_acumulado = 0;
+  let tiempo_inicio = null;
   let intervalo = null;
 
   const limite = 15 * 60 * 1000;
@@ -294,27 +350,51 @@
   const boton_detener = document.getElementById("detener");
   const boton_reiniciar = document.getElementById("reiniciar");
 
-
+  const fondo_granja = document.getElementById("fondo-granja");
   const pasto_pollitos = document.getElementById("pasto-pollitos");
 
   const tiempo_entre_pollitos = 1 * 60 * 1000;
   const velocidad_pollito = 1.5;
+
+  /*
+    Este porcentaje controla qué parte baja de la granja
+    se usa como pasto para los pollitos.
+    Si quieres los pollitos más arriba, sube el número.
+    Si los quieres más abajo, baja el número.
+  */
+  const porcentaje_pasto = 0.32;
 
   const sonido_pollito = new Audio("audio/sonido_pollito.mp3");
   sonido_pollito.volume = 1;
   sonido_pollito.preload = "auto";
 
   let pollitos = [];
-  let intervalo_pollitos = null;
   let animacion_pollitos = null;
   let pollitos_activos = false;
   let siguiente_pollito_ms = tiempo_entre_pollitos;
 
+  function actualizar_area_pasto() {
+    const rect = fondo_granja.getBoundingClientRect();
+
+    const alto_pasto = rect.height * porcentaje_pasto;
+    const top_pasto = rect.bottom - alto_pasto;
+
+    pasto_pollitos.style.left = rect.left + "px";
+    pasto_pollitos.style.top = top_pasto + "px";
+    pasto_pollitos.style.width = rect.width + "px";
+    pasto_pollitos.style.height = alto_pasto + "px";
+    pasto_pollitos.style.bottom = "auto";
+
+    pollitos.forEach(datos => {
+      limitar_pollito_al_pasto(datos);
+      actualizar_posicion_pollito(datos);
+    });
+  }
 
   function mostrar_tiempo(ms) {
     let minutos = Math.floor(ms / 60000);
     let segundos = Math.floor((ms % 60000) / 1000);
-    let milesimas = Math.floor((ms % 1000) /10);
+    let milesimas = Math.floor((ms % 1000) / 10);
 
     let minutos_texto = String(minutos).padStart(2, "0");
     let segundos_texto = String(segundos).padStart(2, "0");
@@ -324,14 +404,14 @@
   }
 
   function generar_pollitos_por_tiempo(transcurrido) {
-  while (
-    siguiente_pollito_ms <= limite &&
-    transcurrido >= siguiente_pollito_ms
-  ) {
-    crear_pollito();
-    siguiente_pollito_ms += tiempo_entre_pollitos;
+    while (
+      siguiente_pollito_ms <= limite &&
+      transcurrido >= siguiente_pollito_ms
+    ) {
+      crear_pollito();
+      siguiente_pollito_ms += tiempo_entre_pollitos;
+    }
   }
-}
 
   function actualizar_cronometro() {
     let ahora = performance.now();
@@ -359,9 +439,7 @@
   function iniciar_cronometro() {
     if (intervalo === null && tiempo_acumulado < limite) {
       tiempo_inicio = performance.now();
-
       intervalo = setInterval(actualizar_cronometro, 10);
-
       iniciar_pollitos();
     }
   }
@@ -388,8 +466,6 @@
     reiniciar_pollitos();
   }
 
-
-
   function reproducir_sonido_pollito() {
     const sonido = sonido_pollito.cloneNode();
     sonido.volume = sonido_pollito.volume;
@@ -398,22 +474,28 @@
     });
   }
 
+  function crear_pollito(reproducir_sonido = true) {
+    actualizar_area_pasto();
 
+    const pollito = document.createElement("img");
 
-  function crear_pollito() {
-    const pollito = document.createElement("div");
     pollito.classList.add("pollito-suelto");
-    pollito.textContent = "🐥";
+    pollito.src = "images/pollito.png";
+    pollito.alt = "Pollito";
+    pollito.draggable = false;
 
     pasto_pollitos.appendChild(pollito);
-    reproducir_sonido_pollito();  
 
-    const size = pollito.offsetWidth || 42;
+    if (reproducir_sonido) {
+      reproducir_sonido_pollito();
+    }
+
+    const size = pollito.offsetWidth || 75;
     const ancho = pasto_pollitos.clientWidth;
     const alto = pasto_pollitos.clientHeight;
 
-    const x = Math.random() * (ancho - size);
-    const y = Math.random() * (alto - size);
+    const x = Math.random() * Math.max(0, ancho - size);
+    const y = Math.random() * Math.max(0, alto - size);
 
     const datos = {
       elemento: pollito,
@@ -472,7 +554,7 @@
   }
 
   function limitar_pollito_al_pasto(datos) {
-    const size = datos.elemento.offsetWidth || 42;
+    const size = datos.elemento.offsetWidth || 75;
     const ancho = pasto_pollitos.clientWidth;
     const alto = pasto_pollitos.clientHeight;
 
@@ -488,13 +570,15 @@
   function mover_pollitos() {
     if (!pollitos_activos) return;
 
+    actualizar_area_pasto();
+
     pollitos.forEach(datos => {
       if (datos.arrastrando) return;
 
       datos.x += datos.dx;
       datos.y += datos.dy;
 
-      const size = datos.elemento.offsetWidth || 42;
+      const size = datos.elemento.offsetWidth || 75;
       const ancho = pasto_pollitos.clientWidth;
       const alto = pasto_pollitos.clientHeight;
 
@@ -541,15 +625,21 @@
 
     pollitos = [];
     siguiente_pollito_ms = tiempo_entre_pollitos;
+
+    crear_pollito(false);
   }
-
-
 
   boton_play.addEventListener("click", iniciar_cronometro);
   boton_detener.addEventListener("click", detener_cronometro);
   boton_reiniciar.addEventListener("click", reiniciar_cronometro);
 
-  mostrar_tiempo(0);
+  window.addEventListener("resize", actualizar_area_pasto);
+
+  window.addEventListener("load", () => {
+    mostrar_tiempo(0);
+    actualizar_area_pasto();
+    crear_pollito(false);
+  });
 </script>
 
 </body>
